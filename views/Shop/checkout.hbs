@@ -1,6 +1,3 @@
-session: {{csrfToken}}
-message: {{message}}
-
 <h1>Checkout</h1>
 <h4>Your Total: ${{total}}</h4>
 
@@ -13,8 +10,6 @@ message: {{message}}
     <div class="col-md-4 col-md-offset-4">
 
 
-
-        <h1>Sign Up</h1>
 {{#if messages }}
 <p>{{messages}}</p>
 {{/if}}
@@ -29,13 +24,9 @@ message: {{message}}
             </div>
         {{/if}}
 
-        <form action="/checkout" method="post" id="checkout-form">
+        <form action="/create-payment-intent" id="payment-form" method="POST">
          <div>
-            <div class="form-group">Card
-            <div style="width: 30em" #stripecardelement id="card-element"></div>
-            </div>
-            </div>
-            <div class="form-group">
+         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" class="form-control" >
             </div>
@@ -43,33 +34,27 @@ message: {{message}}
                 <label for="address">Address</label>
                 <input type="text" id="address" class="form-control" >
             </div>
-            <div class="form-group">
-                <label for="card-name">Card Holder Name</label>
-                <input type="text" id="card-name" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="card-number">Credit Card Number</label>
-                <input type="text" id="card-number" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="card-expiry-month">Expiration Month</label>
-                <input type="text" id="card-expiry-month" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="card-expiry-year">Expiration Year</label>
-                <input type="text" id="card-expiry-year" class="form-control" >
-            </div>
-            <div class="form-group">
-                <label for="card-cvc">CVC</label>
-                <input type="text" id="card-cvc" class="form-control" >
-            </div>
 
+            <div class="form-group">
+            <div style="width: 30em" #stripecardelement id="card-element"></div>
+            </div>
+            </div>
+           
 
-            <button type="submit" class="btn btn-success">Buy now</button>
+      <button id="submit" class="btn btn-success">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Pay now</span>
+      </button>            
+                  <p id="card-error" role="alert"></p>
+      <p class="result-message hidden">
+        Payment succeeded, see the result in your
+        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
+      </p>
         </form>
 
     </div>
 </div>
 
 <script src="https://js.stripe.com/v3" ></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
 <script src="javascripts/checkout.js" ></script>
