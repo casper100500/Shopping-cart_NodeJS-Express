@@ -18,7 +18,7 @@ var purchase = {
 
 // Disable the button until we have Stripe set up on the page
 document.querySelector("button").disabled = true;
-fetch("/create-payment-intent", {
+fetch("../checkout/create-payment-intent", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -83,6 +83,37 @@ var payWithCard = function(stripe, card, clientSecret) {
       } else {
         // The payment succeeded!
         orderComplete(result.paymentIntent.id);
+        //NG code*******************************************************************************
+        console.log('The payment succeeded!')
+        console.log(result)
+        //body: "{'data': 'test'}"
+        //window.location.pathname = '/shop/successfull_payment'
+       //body: JSON.stringify(result)
+
+   
+//4242424242424242
+    //   var json = JSON.stringify(data);
+
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.open("GET", "/shop/successfull_payment");
+    //   xhr.setRequestHeader("Content-Type", "application/json");
+    //  xhr.send(json);
+
+              fetch("../checkout/successfull_payment", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(result)
+            })
+          
+            
+//            ,body: JSON.stringify({a: 1, b: 'Textual content'})
+            //.then(function(result) {
+        //   return result.json();
+        // })
+//4242424242424242
+
       }
     });
 };
@@ -100,6 +131,7 @@ var orderComplete = function(paymentIntentId) {
     );
   document.querySelector(".result-message").classList.remove("hidden");
   document.querySelector("button").disabled = true;
+  window.location.pathname = '/checkout/successfull_payment'
 };
 
 // Show the customer the error from Stripe if their card fails to charge

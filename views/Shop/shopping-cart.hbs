@@ -1,7 +1,7 @@
 
 
 
-Your order:
+<h1>Your order:</h1>
 {{# if products }} 
 
 
@@ -13,7 +13,7 @@ Your order:
                <li class="list-group-item">
                 <span class="badge">{{this.qty}}</span>
                 <strong>{{this.item.title}}</strong>
-                <span class="label label-success">{{this.price}} грн</span>
+                <span class="label label-success">€{{this.price}} EUR</span>
 
 
                     
@@ -38,14 +38,14 @@ Your order:
 
 <div class="row">
     <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <strong>Total: {{totalPrice}} грн</strong>
+        <strong>Total: €{{totalPrice}} EUR</strong>
     </div>
 </div>
 <hr>
 <div class="row">
     <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
 
-        <a href="/checkout" class="btn btn-success pull-right" role="button">Checkout</a>
+        <a href="../checkout/checkout" class="btn btn-success pull-right" role="button">Checkout</a>
              
     </div>
 </div>

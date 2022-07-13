@@ -1,1 +1,30 @@
 <h1>User Profile</h1>
+<h2>Your orders:</h2>
+{{# each Orders }}
+    <div class="row">
+        {{# each this }}
+
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    
+                    <h4>Order id: {{ this._id }}</h3>
+                    <h4>Products: </h3>
+                    <span class="badge">{{this.OrderCart.totalQty}}</span>
+                     {{# each this.OrderCart.items }}
+                        {{this.item.title}},
+                     {{/each}}
+
+                    <h4>Payment status: {{ this.PaymentStatus }}</h3>
+
+                    <div class="clearfix">
+                        <div class="price pull-left">€{{ this.OrderCart.totalPrice }} EUR</div>
+
+                        <a href="#" class="btn btn-success pull-right" role="button">Check payment status</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+    {{/each}}

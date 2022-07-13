@@ -14,7 +14,7 @@ var MongoStore= require('connect-mongo'); //order after express-session. used fo
 
 var routes = require('./routes/index');
 var UserRoutes = require('./routes/user');
-//var ShopRoutes = require('./routes/shopping-cart');
+var CheckoutRoutes = require('./routes/checkout');
 require('./config/passport');
 var passport=require('passport'); //org
 
@@ -67,6 +67,7 @@ app.use(function(req,res,next){
 
 app.use('/user', UserRoutes); //should be above '/' routes. order is important!
 //app.use('/shop', ShopRoutes); //should be above '/' routes. order is important!
+app.use('/checkout', CheckoutRoutes); //should be above '/' routes. order is important!
 app.use('/', routes);
 
 
