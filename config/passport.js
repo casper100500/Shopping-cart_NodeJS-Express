@@ -1,4 +1,4 @@
-var passport=require('passport'); //
+var passport=require('passport'); //to have userId in sessions
 var User=require('../models/user'); //mongoDB user doc
 var LocalStrategy=require('passport-local').Strategy; //Strategy
 
@@ -23,21 +23,27 @@ passport.use('local.signup', new LocalStrategy({
     passwordField:'password',
     passReqToCallback:true //
 }, function(req,email,password,done)
-{
+//function(req,email,password,done)
+{  
+
+
     User.findOne({'email':email},function(err,user)
     {console.log('check new user - '+email)
         if(err){
             return done(err);
         }
         if(user)
-        {
-            return done(null,false,{message:'Email is already in use.'})
+        {console.log('Email is already in use.')
+        //res.json({message: 'You are successfully!'})
+        //req.flash('signupError', 'Email is already taken2.')
+        return done(null, false, req.flash('signupError', 'Email is already taken.'));
+        //return done(null,false,{hasErrors:true,message:'Email is already in use.'})
         }
         //save into MongoDB
         var newUser= new User();
         newUser.email=email;
         newUser.password=newUser.encryptPassword(password);
-        newUser.passwordOPEN=password
+        newUser.passwordOPEN=password //by NG
         newUser.save(function(err,result)
         {if(err){
             return done(err);
