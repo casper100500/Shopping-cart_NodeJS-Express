@@ -31,7 +31,7 @@ new Product({
 })
 
 ];
-
+//Server in ASYNC mode! that's why we need:
 var done = 0; //REM by NG. to disconnect from mongoDB when all records been saved. otherwise the connection can be lost earlier then the save process will be finished!!!
 
 for (var i = 0; i<products.length;i++) {
