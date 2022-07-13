@@ -7,11 +7,13 @@ var bodyParser = require('body-parser');
 var expressHbs= require ('express-handlebars')
 var mongoose=require('mongoose') //MongoDB Client
 var session=require('express-session'); //to have sessions in express
-var index = require('./routes/index');
+var routes = require('./routes/index');
+var UserRoutes = require('./routes/user');
 require('./config/passport');
 var passport=require('passport'); //org
 
 var flash=require('connect-flash'); //for render error msg
+const { allowedNodeEnvironmentFlags } = require('process');
 
 
 
@@ -28,15 +30,34 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+//Middleware setup order (express-session > pass.initialize > pass.session )
 
-app.use(session({secret: 'mysupersecret',resave: false, saveUninitialized: false, cookie:false}));
+//app.use(session({secret: 'mysupersecret',resave: false, saveUninitialized: false, cookie:false}));
+app.use(session(
+  { secret: 'mysupersecret',
+    resave: false, 
+    saveUninitialized: false, 
+    cookie:false
+}));
 
 app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use(function(req,res,next){
+  
+  res.locals.login = req.isAuthenticated() //global value
+  console.log('req.isAuthenticated:')
+  console.log(res.locals.login)
+  next()
+})
+
+
+app.use('/user', UserRoutes); //should be above '/' routes. order is important!
+app.use('/', routes);
+
+
 
 
 // catch 404 and forward to error handler
