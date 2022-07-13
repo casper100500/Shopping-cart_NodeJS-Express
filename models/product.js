@@ -1,6 +1,6 @@
 console.log(`Read products table`);
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/shopping')
+//mongoose.connect('mongodb://localhost:27017/shopping')
 var Schema = mongoose.Schema;
 var schema = new Schema({
     imagePath: {type: String, required: true},

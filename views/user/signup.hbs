@@ -1,0 +1,25 @@
+session: {{csrfToken}}
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1>Sign UP</h1>
+Validation Errors
+       <div class="h1">
+        <form action="/user/signup" method="post">
+        <div class="form-group">
+            <label for="email">E-MAIL</label>
+            <input type="text" id="email" name="email" class="form-control">E-MAIL</label>
+        </div>
+
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" class="form-control">Password</label>
+        </div>
+        
+         <input type="text" name="_csrf" value="{{csrfToken}}">
+         <button type="submit" class="btn btn-primary">Sign UP</button>
+        </form>
+       </div> 
+    </div>
+
+</div>
