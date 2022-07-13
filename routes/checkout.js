@@ -29,7 +29,7 @@ const calculateOrderAmount = items => {
 };
 
 router.post("/create-payment-intent", async (req, res) => {
-  //var cart = new Cart(req.session.cart)
+ //var cart = new Cart(req.session.cart)
  // res.render('shop/shopping-cart', { products:cart.generateArray(), totalPrice:cart.totalPrice});
 
   const { items } = req.body;
@@ -116,6 +116,7 @@ router.post("/successfull_payment", async (req, res) => {
 //findStr="{'PaymentID':'"+orderId+"'}"
 //findStr="{'PaymentID':'pi_3LHTvFGUvmt8rPeQ0Ym7RkJ3'}"
 //console.log(findStr)
+
 Order.findOne({PaymentID:PaymentID},async function(err,order)
 {
   if (err) {

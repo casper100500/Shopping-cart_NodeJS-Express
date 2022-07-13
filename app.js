@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
-var logger = require('morgan');
+var logger = require('morgan'); //Calerfull console log for express
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs= require ('express-handlebars')
@@ -59,6 +59,10 @@ app.use(function(req,res,next){
   
   res.locals.login = req.isAuthenticated() //global value
   res.locals.session=req.session
+  if (req.user !== undefined)
+  {
+    res.locals.user = req.user.email
+  }
   console.log('req.isAuthenticated:')
   console.log(res.locals.login)
   next()

@@ -8,6 +8,10 @@ router.use(csrfProtection);
 
 router.get('/profile',isLoggedIn,function(req,res,next)
 {
+//console.log(req.cookies)
+
+  
+
   if (req.user !== undefined)
   {
     user = req.user.email
