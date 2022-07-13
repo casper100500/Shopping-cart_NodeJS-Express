@@ -23,7 +23,6 @@ passport.use('local.signup', new LocalStrategy({
     passwordField:'password',
     passReqToCallback:true //
 }, function(req,email,password,done)
-//function(req,email,password,done)
 {  
 
 
@@ -34,11 +33,8 @@ passport.use('local.signup', new LocalStrategy({
         }
         if(user)
         {console.log('Email is already in use.')
-        //res.json({message: 'You are successfully!'})
-        //req.flash('signupError', 'Email is already taken2.')
-        return done(null, false, req.flash('signupError', 'Email is already taken.'));
-        //return done(null,false,{hasErrors:true,message:'Email is already in use.'})
-        }
+       return done(null, false, req.flash('error', 'Email is already taken.'));
+     }
         //save into MongoDB
         var newUser= new User();
         newUser.email=email;
@@ -51,5 +47,31 @@ passport.use('local.signup', new LocalStrategy({
         return done(null,newUser);
 
         })
+    });
+}));
+
+//Signin LocalStrategy
+passport.use('local.signin', new LocalStrategy({
+    usernameField:'email',
+    passwordField:'password',
+    passReqToCallback:true //
+}, function(req,email,password,done)
+{  
+
+
+    User.findOne({'email':email},function(err,user)
+    {
+        if(err){
+            return done(err);
+        }
+        if(!user)
+        {//'No user found'
+            return done(null, false, req.flash('error', 'No user found'));
+        }
+        if(!user.validPassword(password))
+        {//'Wrong password'
+            return done(null, false, req.flash('error', 'Wrong password'));
+        }
+  return done(null,user) //everything is ok.
     });
 }));

@@ -23,7 +23,7 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function in VBA
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX8 Validation&Flash', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX9 Sign In', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
 
@@ -35,13 +35,13 @@ router.get('/user/signup',function(req,res,next){
   console.log('Session ID - '+req.session.csrfSecret);
   console.log('Session Token - '+req.csrfToken()); //Token coming from webbrowser?
   
-  const errors=req.flash('signupError') //flash can be read once and will be erased !!!
+  const ErrorMessages=req.flash('error') //flash can be read once and will be erased !!!
 
-  if (errors.length>0)
+  if (ErrorMessages.length>0)
   //if (!errors.isEmpty)
-  {   console.log(errors)
+  {   console.log(ErrorMessages)
   
-    res.render('user/signup', { hasErrors:true, messages:errors,csrfToken:req.csrfToken()});
+    res.render('user/signup', { hasErrors:true, messages:ErrorMessages,csrfToken:req.csrfToken()});
   }
   else
   {
@@ -97,23 +97,65 @@ body('password').isLength({ min: 5 })
   {
   res.render('user/profile');
   });
- // console.log('Im here')
-  //res.redirect('/');
-  
 
+  //SignIN******************************
+  router.get('/user/signin',function(req,res,next){
+    console.log('Session ID - '+req.session.csrfSecret);
+    console.log('Session Token - '+req.csrfToken()); //Token coming from webbrowser?
+    
+    const ErrorMessages=req.flash('error') //flash can be read once and will be erased !!!
+  
+    if (ErrorMessages.length>0)
+
+    {   console.log(ErrorMessages)
+    
+      res.render('user/signin', { hasErrors:true, messages:ErrorMessages,csrfToken:req.csrfToken()});
+    }
+    else
+    {
+      res.render('user/signin', {csrfToken:req.csrfToken()});
+      
+    }
+   
+  });
+
+  router.post('/user/signin',
+  [body('email').isEmail(),
+  body('password').isLength({ min: 5 }) 
+  ]
+  
+   ,
+   (req,res,next)=>{
+     console.log('*********Body**************')
+     console.log(req.body)
+     console.log('*********Errors**************')
+     var errors = validationResult(req);
+     console.log(errors)
+     console.log('***********************') 
+     if (!errors.isEmpty()) {
+              var ErrorMessages=[];
+  
+               errors.errors.forEach(function (error) {
+                ErrorMessages.push(error.param+' - '+error.msg);
+                      });
+     return res.render('user/signin',{ hasErrors:true, messages:ErrorMessages ,csrfToken:req.csrfToken})
+      
+     }
+      
+      console.log('passport.authenticate...')
+   
+      passport.authenticate('local.signin',
+      {
+        successRedirect:'/',
+        failureRedirect: '/user/signin',
+        filureFlash:true,
+       
+      })(req, res, next); //fixed by NG
+  
+      console.log('***********************')
+    }
+  
+    );
 
 module.exports = router;
 
-//docs.forEach(element => {console.log(element.title);});
-
-//productChunks= [
-//["Gothic Video Game","IGI Project","Mortal Kombat"]
-//["Far Cry 3"]
-//]
-//console.log(productChunks[1][0].title);
-//productChunks.forEach(element => {  console.log(element[0].title);});
- // productChunks.push(docs[i])
-  //console.log(i)
-  //console.log(productChunks[i][0].title)
-
-//productChunkconsole.log(productChunks[0].length)
