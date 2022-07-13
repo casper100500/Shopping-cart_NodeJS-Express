@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 var expressHbs= require ('express-handlebars')
 var mongoose=require('mongoose') //MongoDB Client
 var session=require('express-session'); //to have sessions in express
+//var MongoStore= require('connect-mongo')(session); //order after express-session. used for save session data
+var MongoStore= require('connect-mongo'); //order after express-session. used for save session data
+
 var routes = require('./routes/index');
 var UserRoutes = require('./routes/user');
 require('./config/passport');
@@ -18,7 +21,8 @@ const { allowedNodeEnvironmentFlags } = require('process');
 
 
 var app = express();
-mongoose.connect('mongodb://localhost:27017/shopping')
+const mongoDBurl='mongodb://localhost:27017/shopping'
+mongoose.connect(mongoDBurl)
 
 // view engine setup
 app.engine('.hbs',expressHbs.engine({defaultLayout: 'layout',extname: '.hbs' }))
@@ -37,8 +41,11 @@ app.use(session(
   { secret: 'mysupersecret',
     resave: false, 
     saveUninitialized: false, 
-    cookie:false
-}));
+    store: MongoStore.create({ mongoUrl: mongoDBurl }),   
+    cookie:{maxAge:180 * 60 * 100} // session TTL = 180min
+  }
+   
+));
 
 app.use(flash());
 app.use(passport.initialize())
@@ -48,6 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){
   
   res.locals.login = req.isAuthenticated() //global value
+  res.locals.session=req.session
   console.log('req.isAuthenticated:')
   console.log(res.locals.login)
   next()

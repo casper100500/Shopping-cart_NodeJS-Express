@@ -1,7 +1,8 @@
 var express = require('express');
+//const cart = require('../models/cart');
 var router = express.Router();
 var Product = require('../models/product')
-
+var Cart = require('../models/cart')
 /* GET home page. */
 router.get('/', function(req, res, next) {
 var Products=Product.find(function(err,docs){
@@ -17,15 +18,33 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function in VBA
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX10 Route Grouping & Protection', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX11 Adding a Session Store + 12 Cart Model', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
-
-
-  
+ 
 });
 
+/* fff */
+router.get('/add-to-cart/:id', function(req, res, next) {
 
+var productId = req.params.id
+//Create new Cart or use previous one if exsists
+var cart= new Cart(req.session.cart ? req.session.cart :{});
+
+Product.findById(productId,function(err,product)
+{
+  if (err) {
+    return res.redirect('/')
+  }
+  //console.log('get(/add-to-cart/:id)')
+  cart.add(product, product.id)
+  req.session.cart = cart;
+  console.log(req.session.cart)
+  res.redirect('/')
+}
+)
+
+});
 
 module.exports = router;
 
