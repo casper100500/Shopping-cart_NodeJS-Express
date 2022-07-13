@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Product = require('../models/product')
-var csrf=require('csurf') //Password HASHing
+var csrf=require('csurf'); //Session token
+const passport = require('passport');
 
 var csrfProtection=csrf({cookie: false});
 router.use(csrfProtection);
@@ -9,7 +10,7 @@ router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var Products=Product.find(function(err,docs){
+var Products=Product.find(function(err,docs){
     
 //console.log(docs) //by NG
 var productChunks=[];
@@ -22,7 +23,7 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX6', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX7', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
 
@@ -31,20 +32,30 @@ res.render('shop/index', { title: 'Shopping Cart_EX6', products:productChunks })
 });
 
 router.get('/user/signup',function(req,res,next){
-  console.log(req.session.csrfSecret);
-  //console.log(req.csrfToken());
-  console.log(res);
+  console.log('Session ID - '+req.session.csrfSecret);
+  console.log('Session Token - '+req.csrfToken()); //Token coming from webbrowser?
+  //console.log(res);
   res.render('user/signup', {csrfToken:req.csrfToken()});
 //  res.render('user/signup', {csrfToken:'dsddsdqdsw'});
   //res.render('user/signup', {csrfToken:req.session.csrfSecret, test:'tttt'});
   
 });
 
-router.post('/user/signup',function(req,res,next){
-  console.log('Im here')
-  res.redirect('/');
+router.post('/user/signup', passport.authenticate('local.signup',
+  {
+    successRedirect:'/user/profile',
+    failureRedirect: '/user/signup',
+    filureFlash:true
+  }));
+
+  router.get('/user/profile',function(req,res,next)
+  {
+  res.render('user/profile');
+  });
+ // console.log('Im here')
+  //res.redirect('/');
   
-});
+
 
 module.exports = router;
 

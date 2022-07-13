@@ -1,4 +1,4 @@
-console.log(`Read products table`);
+console.log(`Use products table`);
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost:27017/shopping')
 var Schema = mongoose.Schema;
@@ -9,9 +9,6 @@ var schema = new Schema({
     price: {type: Number, required: true},
 });
 //console.log(`almost done`);
-module.exports = mongoose.model('Product', schema)
+module.exports = mongoose.model('Product', schema) //JSON -> mongodb
 //console.log(`Done`);
 //mongoose.disconnect;
-
-
-

@@ -1,0 +1,12 @@
+    "bcrypt-nodejs": for password encryption
+    "connect-flash": to flash messages (errors)
+    "csurf": to protect session by Token
+    "express": webserver itself
+    "express-handlebars": to have handlebars capabilities
+    "express-session": to have session on webserver
+    "hbs": "~4.0.4",
+    "mongoose": MongoDB Client
+    "morgan": "~1.9.1",
+    "nodemon": to use cmd 'npm start' automaticly
+    "passport": to handle signup/signin process
+    "passport-local": for local stretegy passwords
