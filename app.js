@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs= require ('express-handlebars')
 var mongoose=require('mongoose') //MongoDB Client
+var Stripe=require('stripe') //Payment wesite
 var session=require('express-session'); //to have sessions in express
 //var MongoStore= require('connect-mongo')(session); //order after express-session. used for save session data
 var MongoStore= require('connect-mongo'); //order after express-session. used for save session data

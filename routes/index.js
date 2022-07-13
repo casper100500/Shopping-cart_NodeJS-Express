@@ -18,7 +18,7 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function in VBA
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX14 Stripe Payment Views', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX15 Stripe Verifying Credit Cards', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
  
@@ -64,12 +64,10 @@ res.render('shop/shopping-cart', { products:cart.generateArray(), totalPrice:car
 
 
 router.get('/checkout', function(req, res, next) {
-  if(!req.session.cart)
-  {
-    return res.redirect('/shopping-cart');
-  }
-  var cart = new Cart(req.session.cart)
-  res.render('shop/checkout', { total:cart.totalPrice});
+  //if(!req.session.cart)  {    return res.redirect('/shopping-cart');  }
+ // var cart = new Cart(req.session.cart)
+//  res.render('shop/checkout', { total:cart.totalPrice});
+  res.render('shop/checkout');
 
 })
 
