@@ -18,13 +18,19 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function in VBA
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX11 Adding a Session Store + 12 Cart Model', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX13 show cart', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
  
 });
 
 /* fff */
+router.get('/clear-cart', function(req, res, next) {
+  delete req.session.cart 
+  console.log(req.session)
+  res.redirect('/');
+})
+
 router.get('/add-to-cart/:id', function(req, res, next) {
 
 var productId = req.params.id
@@ -45,6 +51,16 @@ Product.findById(productId,function(err,product)
 )
 
 });
+
+router.get('/shop/shopping-cart',function(req,res,next){
+  console.log('ddddddddddddd')
+  if(!req.session.cart)
+  {
+    return res.render('shop/shopping-cart', { products:null });
+  }
+var cart = new Cart(req.session.cart)
+res.render('shop/shopping-cart', { products:cart.generateArray(), totalPrice:cart.totalPrice});
+})
 
 module.exports = router;
 
