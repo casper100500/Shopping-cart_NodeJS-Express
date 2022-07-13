@@ -18,7 +18,7 @@ for (var i = 0; i< docs.length;i +=chunkSize)
   //slice=mid function in VBA
 }
 
-res.render('shop/index', { title: 'Shopping Cart_EX13 show cart', products:productChunks });
+res.render('shop/index', { title: 'Shopping Cart_EX14 Stripe Payment Views', products:productChunks });
   
   }).lean(); //patch by NG added .lean();!!!!
  
@@ -53,13 +53,24 @@ Product.findById(productId,function(err,product)
 });
 
 router.get('/shop/shopping-cart',function(req,res,next){
-  console.log('ddddddddddddd')
+
   if(!req.session.cart)
   {
     return res.render('shop/shopping-cart', { products:null });
   }
 var cart = new Cart(req.session.cart)
 res.render('shop/shopping-cart', { products:cart.generateArray(), totalPrice:cart.totalPrice});
+})
+
+
+router.get('/checkout', function(req, res, next) {
+  if(!req.session.cart)
+  {
+    return res.redirect('/shopping-cart');
+  }
+  var cart = new Cart(req.session.cart)
+  res.render('shop/checkout', { total:cart.totalPrice});
+
 })
 
 module.exports = router;
