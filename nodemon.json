@@ -1,0 +1,10 @@
+{
+    "env":
+    { 
+    "MONGO_DB": "shopping-cart-ng",
+    "MONGO_USER":"user31",
+    "MONGO_PASSWORD":"44TY4JaMch2a3tA",
+    "jwtPassword":"somesupersecretkey"
+
+    }
+}

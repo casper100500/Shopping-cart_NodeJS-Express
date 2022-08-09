@@ -29,7 +29,16 @@ res.render('shop/index', { title: 'Shopping Cart_EX17 Storing Orders in the Data
 router.get('/clear-cart', function(req, res, next) {
   delete req.session.cart 
   console.log(req.session)
-  res.redirect('/');
+  res.render('shop/session');
+})
+
+router.get('/session', function(req, res, next) {
+  
+  
+  console.log(req.session)
+  console.log(req.cart2)
+  res.render('shop/session');
+//  res.redirect('/session');
 })
 
 router.get('/add-to-cart/:id', function(req, res, next) {
@@ -37,6 +46,7 @@ router.get('/add-to-cart/:id', function(req, res, next) {
 var productId = req.params.id
 //Create new Cart or use previous one if exsists
 var cart= new Cart(req.session.cart ? req.session.cart :{});
+
 
 Product.findById(productId,function(err,product)
 {
@@ -46,6 +56,7 @@ Product.findById(productId,function(err,product)
   //console.log('get(/add-to-cart/:id)')
   cart.add(product, product.id)
   req.session.cart = cart;
+  req.cartMY = cart;
   console.log(req.session.cart)
   res.redirect('/')
 }

@@ -61,7 +61,8 @@ fetch("../checkout/create-payment-intent", {
     form.addEventListener("submit", function(event) {
       event.preventDefault();
       // Complete payment when the submit button is clicked
-      payWithCard(stripe, card, data.clientSecret);
+      console.log(data.OrderID)
+      payWithCard(stripe, card, data.clientSecret,data.OrderID);
     });
   });
 
@@ -69,6 +70,7 @@ fetch("../checkout/create-payment-intent", {
 // If the card requires authentication Stripe shows a pop-up modal to
 // prompt the user to enter authentication details without leaving your page.
 var payWithCard = function(stripe, card, clientSecret) {
+//  var payWithCard = function(stripe, card, clientSecret,OrderID) {
   loading(true);
   stripe
     .confirmCardPayment(clientSecret, {
@@ -85,6 +87,7 @@ var payWithCard = function(stripe, card, clientSecret) {
         orderComplete(result.paymentIntent.id);
         //NG code*******************************************************************************
         console.log('The payment succeeded!')
+        result.OrderID=OrderID
         console.log(result)
         //body: "{'data': 'test'}"
         //window.location.pathname = '/shop/successfull_payment'

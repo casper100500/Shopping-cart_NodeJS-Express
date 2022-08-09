@@ -4,6 +4,7 @@ var LocalStrategy=require('passport-local').Strategy; //Strategy
 
 passport.serializeUser(function(user,done) //save userid in the current session
 {//user.id->ObjectID in MongoDB
+
     console.log('serializeUser - save userid in the current session. userid - '+user.id)
     done(null,user.id) //to have a userId
 });
@@ -44,20 +45,27 @@ passport.use('local.signup', new LocalStrategy({
         {if(err){
             return done(err);
         }
+
+        console.log('Session************')
+        console.log(req.session)
+        console.log('*******************')
+
         return done(null,newUser);
 
         })
     });
 }));
 
-//Signin LocalStrategy
+//Login LocalStrategy
 passport.use('local.signin', new LocalStrategy({
     usernameField:'email',
     passwordField:'password',
     passReqToCallback:true //
 }, function(req,email,password,done)
 {  
-
+    console.log('Session************')
+    console.log(req.session)
+    console.log('*******************')
 
     User.findOne({'email':email},function(err,user)
     {

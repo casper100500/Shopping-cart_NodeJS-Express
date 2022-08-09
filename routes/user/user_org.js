@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var csrf=require('csurf'); //Session token
 const passport = require('passport');
-var Order = require('../models/order')
+var Order = require('../../models/order')
 var csrfProtection=csrf({cookie: false});
 router.use(csrfProtection);
 
@@ -118,8 +118,8 @@ router.post('/signup',
   
 );
    
-//SignIN******************************
-router.get('/signin',function(req,res,next){
+//login******************************
+router.get('/login',function(req,res,next){
       console.log('Session ID - '+req.session.csrfSecret);
       console.log('Session Token - '+req.csrfToken()); //Token coming from webbrowser?
       
@@ -129,17 +129,17 @@ router.get('/signin',function(req,res,next){
   
       {   console.log(ErrorMessages)
       
-        res.render('user/signin', { hasErrors:true, messages:ErrorMessages,csrfToken:req.csrfToken()});
+        res.render('user/login', { hasErrors:true, messages:ErrorMessages,csrfToken:req.csrfToken()});
       }
       else
       {
-        res.render('user/signin', {csrfToken:req.csrfToken()});
+        res.render('user/login', {csrfToken:req.csrfToken()});
         
       }
      
 });
   
-router.post('/signin',
+router.post('/login',
     [body('email').isEmail(),
     body('password').isLength({ min: 5 }) 
     ]
@@ -152,27 +152,38 @@ router.post('/signin',
        var errors = validationResult(req);
        console.log(errors)
        console.log('***********************') 
+       console.log(req.session)
+      const cart=req.session.cart
+
        if (!errors.isEmpty()) {
                 var ErrorMessages=[];
     
                  errors.errors.forEach(function (error) {
                   ErrorMessages.push(error.param+' - '+error.msg);
                         });
-       return res.render('user/signin',{ hasErrors:true, messages:ErrorMessages ,csrfToken:req.csrfToken})
+       return res.render('user/login',{ hasErrors:true, messages:ErrorMessages ,csrfToken:req.csrfToken})
         
        }
         
         console.log('passport.authenticate...')
      
-        passport.authenticate('local.signin',
-        {
-          successRedirect:'/',
-          failureRedirect: '/user/signin',
-          filureFlash:true,
-         
-        })(req, res, next); //fixed by NG
-    
-        console.log('***********************')
+         passport.authenticate('local.signin',
+         {
+           successRedirect:'/',
+           failureRedirect: '/user/login',
+           filureFlash:true
+        
+         })(req, res, next); //fixed by NG
+
+  
+
+          req.session.cart=cart
+        //  req.cartTMP=cart
+          console.log(req.session)
+          console.log('***********************')
+        //return next()
+        
+     
       }
     
 );

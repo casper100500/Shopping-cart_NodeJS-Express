@@ -4,6 +4,8 @@ var Order = require('../models/order')
 var Cart = require('../models/cart')
 //var Stripe=require('stripe') //Payment wesite
 const stripe = require("stripe")("sk_test_51LGe7YGUvmt8rPeQ8q2gvYL4SIP25obw5Oj7IwVkqjs00xWDBOvfIyCh10kur6gMgRMV2rV4DgjGceWL4SXLKLuD00yCXXOQ1P");
+
+
 router.get('/checkout', function(req, res, next) {
   if(!req.session.cart)  {    return res.redirect('shop/shopping-cart');  }
 
@@ -86,21 +88,27 @@ var order =
     OrderCart:cart,
     User: user,
     PaymentID: paymentIntent.id,
-    PaymentStatus:'unknown'
+    PaymentStatus:'unknown',
+    SessionID:req.session.csrfSecret
   });
   //console.log(order)
   order.save()
-
+  console.log('order.id:**************')
+  console.log(order.id)
+  console.log('session id:**************')
+  console.log(req.session.csrfSecret)
+  
+  //...result._doc, password: null, _id: result.id
+  //res.send({clientSecret: paymentIntent.client_secret, OrderID:order.id});
   res.send({clientSecret: paymentIntent.client_secret});
-
 });
 
 router.post("/successfull_payment", async (req, res) => {
   console.log('Page successfull_payment:')
   //console.log(req.headers)
- // console.log('req.body:')
-  //console.log(req.body)
-  //console.log('**************')
+  console.log('req.body:')
+  console.log(req.body)
+  console.log('**************')
   
 
 //orderId='62c190aee10b27f862521bfa'
@@ -149,7 +157,8 @@ router.get('/successfull_payment', async (req, res) => {
 
   var cart = new Cart(req.session.cart)
   totalPrice=cart.totalPrice
-  delete req.session.cart
+ //  req.session.cart
+   delete req.session.cart 
   res.render('shop/successfull_payment', {total:totalPrice});
   });
 

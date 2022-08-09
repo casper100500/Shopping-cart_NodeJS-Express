@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
-var logger = require('morgan'); //Calerfull console log for express
+var logger = require('morgan'); //Coulerfull console log for express
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs= require ('express-handlebars')
@@ -13,7 +13,7 @@ var session=require('express-session'); //to have sessions in express
 var MongoStore= require('connect-mongo'); //order after express-session. used for save session data
 
 var routes = require('./routes/index');
-var UserRoutes = require('./routes/user');
+var UserRoutes = require('./routes/user/!Routes');
 var CheckoutRoutes = require('./routes/checkout');
 require('./config/passport');
 var passport=require('passport'); //org
@@ -24,8 +24,21 @@ const { allowedNodeEnvironmentFlags } = require('process');
 
 
 var app = express();
-const mongoDBurl='mongodb://localhost:27017/shopping'
-mongoose.connect(mongoDBurl)
+
+// const mongoDBurl='mongodb://localhost:27017/shopping'
+// mongoose.connect(mongoDBurl)
+
+const connectMongoDB=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
+@cluster0.rwg46sl.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+//console.log(connectMongoDB)
+
+mongoose.connect(connectMongoDB).then(()=>{
+    app.listen(5000);
+}).catch(err=>{
+    console.log(err);
+})
+
+
 
 // view engine setup
 app.engine('.hbs',expressHbs.engine({defaultLayout: 'layout',extname: '.hbs' }))
@@ -40,17 +53,35 @@ app.use(cookieParser());
 //Middleware setup order (express-session > pass.initialize > pass.session )
 
 //app.use(session({secret: 'mysupersecret',resave: false, saveUninitialized: false, cookie:false}));
+
+// app.use(session(
+//   { secret: 'mysupersecret',
+//     resave: false, 
+//     saveUninitialized: false, 
+//     store: MongoStore.create({ mongoUrl: mongoDBurl }),   
+//     cookie:{maxAge:180 * 60 * 100} // session TTL = 180min
+//   }
+   
+// ));
+
+
 app.use(session(
-  { secret: 'mysupersecret',
+  { secret: process.env.jwtPassword,
     resave: false, 
     saveUninitialized: false, 
-    store: MongoStore.create({ mongoUrl: mongoDBurl }),   
+    store: MongoStore.create({ mongoUrl: connectMongoDB }),   
     cookie:{maxAge:180 * 60 * 100} // session TTL = 180min
   }
    
 ));
 
 app.use(flash());
+app.use(function(req,res,next){
+  //console.log('Session************')
+  //console.log(req.session)
+  //console.log('*******************')
+  next()
+})
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
