@@ -27,13 +27,13 @@ var app = express();
 
 // const mongoDBurl='mongodb://localhost:27017/shopping'
 // mongoose.connect(mongoDBurl)
-
-const connectMongoDB=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
-@cluster0.rwg46sl.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
-//console.log(connectMongoDB)
+ const connectMongoDB='mongodb://localhost:27017/shopping'
+// const connectMongoDB=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
+// @cluster0.rwg46sl.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+console.log(connectMongoDB)
 
 mongoose.connect(connectMongoDB).then(()=>{
-    app.listen(5000);
+    app.listen(process.env.expressPort);
 }).catch(err=>{
     console.log(err);
 })

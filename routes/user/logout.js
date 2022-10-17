@@ -10,6 +10,3 @@ exports.LogoutGET= (auth.isLoggedIn, function(req, res, next) {
     res.redirect('/');
   });
 });
-
-
-
